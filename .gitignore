@@ -1,0 +1,26 @@
+.env
+
+# Go
+
+bin/
+*.exe
+*.test
+*.out
+coverage.out
+*.prof
+
+# Node
+
+data/
+ui/node_modules/
+ui/dist/
+internal/web/dist/
+
+# IDE
+
+.idea/
+.vscode/
+
+# OS
+
+.DS_Store

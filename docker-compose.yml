@@ -1,0 +1,18 @@
+services:
+  rateguard:
+    image: rateguard:local
+    container_name: rateguard
+
+    ports:
+      - "${PORT:-4215}:${PORT:-4215}"
+
+    env_file:
+      - .env
+
+    volumes:
+      - rateguard_data:/app/data
+
+    restart: unless-stopped
+
+volumes:
+  rateguard_data:
