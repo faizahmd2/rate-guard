@@ -20,6 +20,88 @@ RateGuard
 
 The application decides what to do with the result — continue, retry, queue, or reject the request.
 
+## Run with Docker
+
+The easiest way to run RateGuard is with Docker.
+
+RateGuard is distributed as a single container image. Redis is the only external runtime dependency.
+
+### Pull the image
+
+```bash
+docker pull ghcr.io/faizahmd2/rate-guard:latest
+```
+
+### Generate a cookie secret
+
+```bash
+openssl rand -hex 32
+```
+
+Copy the generated value for cookie secret.
+
+### Run RateGuard
+
+Once Redis is running:
+
+```bash
+docker run -d \
+  --name rateguard \
+  -p 4215:4215 \
+  -e REDIS_HOST=localhost \
+  -e REDIS_PORT=6379 \
+  -e COOKIE_SECRET="your-generated-secret" \
+  -e ENVIRONMENT=production \
+  -v rateguard_data:/app/data \
+  ghcr.io/faizahmd2/rate-guard:latest
+```
+
+If Redis is running somewhere else, replace `REDIS_HOST` with your Redis address.
+
+RateGuard will be available at:
+
+```text
+http://localhost:4215
+```
+
+Open the URL in your browser to access the admin UI.
+
+### Check the container
+
+```bash
+docker ps
+```
+
+View logs:
+
+```bash
+docker logs -f rateguard
+```
+
+Stop RateGuard:
+
+```bash
+docker stop rateguard
+```
+
+Start it again:
+
+```bash
+docker start rateguard
+```
+
+Remove the container:
+
+```bash
+docker rm -f rateguard
+```
+
+The SQLite database is persisted through the Docker volume:
+
+```text
+rateguard_data
+```
+
 ## Features
 
 * Centralized API rate limiting
@@ -183,11 +265,9 @@ npm run dev
 
 ---
 
-# Docker
+# Docker Development
 
-RateGuard can run as a single container.
-
-Build the image:
+Build the image locally:
 
 ```bash
 docker build -t rateguard:local .
@@ -199,7 +279,7 @@ Create the environment file:
 cp .env.example .env
 ```
 
-Start RateGuard:
+Start RateGuard with Docker Compose:
 
 ```bash
 docker compose up -d
@@ -221,12 +301,6 @@ RateGuard will be available at:
 
 ```text
 http://localhost:4215
-```
-
-The SQLite database is persisted through the Docker volume:
-
-```text
-rateguard_data
 ```
 
 Stop the service:
