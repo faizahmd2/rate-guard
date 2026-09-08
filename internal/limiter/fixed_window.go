@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	redisstore "github.com/faizahmd2/rate-limitter-service/internal/redis"
+	redisstore "github.com/faizahmd2/rate-guard/internal/redis"
 )
 
 type FixedWindowConfig struct {

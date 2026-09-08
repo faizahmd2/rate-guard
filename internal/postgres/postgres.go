@@ -6,7 +6,7 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/faizahmd2/rate-limitter-service/internal/config"
+	"github.com/faizahmd2/rate-guard/internal/config"
 )
 
 func NewPool(ctx context.Context, cfg config.PostgresConfig) (*pgxpool.Pool, error) {

@@ -132,8 +132,8 @@ Production environment/Docker users only need:
 Clone the repository:
 
 ```bash
-git clone https://github.com/faizahmd2/rate-limitter-service.git
-cd rate-limitter-service
+git clone https://github.com/faizahmd2/rate-guard.git
+cd rate-guard
 ```
 
 Create the environment file:

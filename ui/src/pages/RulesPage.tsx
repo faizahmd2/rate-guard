@@ -266,36 +266,32 @@ function RuleEditor({
   onCancel: () => void
   onSave: (rule: Rule) => void
 }) {
-    const [draft, setDraft] = useState<Rule>(rule)
-  const isTokenBucket = rule.algorithm === 'token_bucket'
+  const [draft, setDraft] = useState<Rule>(rule)
 
   function updateAlgorithm(algorithm: Algorithm) {
-    if (algorithm === 'token_bucket') {
-      onSavePreview({
-        ...draft,
-        algorithm,
-        config: {
-          capacity: 120,
-          refill_rate: 2,
-          key_strategy: 'account',
-        },
-      })
-    } else {
-      onSavePreview({
-        ...draft,
-        algorithm,
-        config: {
-          limit: 5,
-          window_seconds: 10,
-          key_strategy: 'account',
-        },
-      })
-    }
+    const config =
+      algorithm === 'token_bucket'
+        ? {
+            capacity: 120,
+            refill_rate: 2,
+            key_strategy: 'account',
+          }
+        : {
+            limit: 5,
+            window_seconds: 10,
+            key_strategy: 'account',
+          }
+
+    setDraft({
+      ...draft,
+      algorithm,
+      config,
+    } as Rule)
   }
 
-  function onSavePreview(nextRule: Rule) {
-    setDraft(nextRule)
-  }
+  const isTokenBucket = draft.algorithm === 'token_bucket'
+  const isFixedWindow = draft.algorithm === 'fixed_window'
+  const isSlidingWindow = draft.algorithm === 'sliding_window'
 
   return (
     <div>
@@ -305,9 +301,7 @@ function RuleEditor({
             {rule.id ? 'EDIT RULE' : 'NEW RULE'}
           </p>
 
-          <h1>
-            {rule.id ? 'Edit rule' : 'Create rule'}
-          </h1>
+          <h1>{rule.id ? 'Edit rule' : 'Create rule'}</h1>
 
           <p className="page-description">
             Configure the limits applied to this resource.
@@ -325,12 +319,9 @@ function RuleEditor({
                 label="Service"
                 value={draft.service}
                 disabled={Boolean(rule.id)}
-                placeholder="xoxoday"
+                placeholder="payments"
                 onChange={(value) =>
-                  setDraft({
-                    ...draft,
-                    service: value,
-                  } as Rule)
+                  setDraft({ ...draft, service: value } as Rule)
                 }
               />
 
@@ -338,12 +329,9 @@ function RuleEditor({
                 label="Resource"
                 value={draft.resource}
                 disabled={Boolean(rule.id)}
-                placeholder="purchase"
+                placeholder="create-payment"
                 onChange={(value) =>
-                  setDraft({
-                    ...draft,
-                    resource: value,
-                  } as Rule)
+                  setDraft({ ...draft, resource: value } as Rule)
                 }
               />
             </div>
@@ -354,36 +342,24 @@ function RuleEditor({
 
             <div className="algorithm-options">
               <AlgorithmOption
-                selected={
-                  draft.algorithm === 'token_bucket'
-                }
+                selected={draft.algorithm === 'token_bucket'}
                 title="Token bucket"
                 description="Allows bursts while controlling the average request rate."
-                onClick={() =>
-                  updateAlgorithm('token_bucket')
-                }
+                onClick={() => updateAlgorithm('token_bucket')}
               />
 
               <AlgorithmOption
-                selected={
-                  draft.algorithm === 'fixed_window'
-                }
+                selected={draft.algorithm === 'fixed_window'}
                 title="Fixed window"
-                description="Simple request count over fixed time windows."
-                onClick={() =>
-                  updateAlgorithm('fixed_window')
-                }
+                description="Counts requests in each fixed time window."
+                onClick={() => updateAlgorithm('fixed_window')}
               />
 
               <AlgorithmOption
-                selected={
-                  draft.algorithm === 'sliding_window'
-                }
+                selected={draft.algorithm === 'sliding_window'}
                 title="Sliding window"
-                description="Smooth request limits across a rolling time window."
-                onClick={() =>
-                  updateAlgorithm('sliding_window')
-                }
+                description="Counts requests across a rolling time window."
+                onClick={() => updateAlgorithm('sliding_window')}
               />
             </div>
           </div>
@@ -391,99 +367,115 @@ function RuleEditor({
           <div className="form-section">
             <h2>Limit</h2>
 
-            {isTokenBucket ? (
-              <div className="form-grid">
-                <NumberField
-                  label="Capacity"
-                  value={
-                    'capacity' in draft.config
-                      ? draft.config.capacity
-                      : 120
-                  }
-                  onChange={(value) =>
-                    setDraft({
-                      ...draft,
-                      config: {
-                        capacity: value,
-                        refill_rate:
-                          'refill_rate' in draft.config
-                            ? draft.config.refill_rate
-                            : 2,
-                        key_strategy: 'account',
-                      },
-                    } as Rule)
-                  }
-                />
+            {isTokenBucket && (
+              <>
+                <div className="form-grid">
+                  <NumberField
+                    label="Capacity (maximum burst)"
+                    value={
+                      'capacity' in draft.config
+                        ? draft.config.capacity
+                        : 120
+                    }
+                    onChange={(value) =>
+                      setDraft({
+                        ...draft,
+                        config: {
+                          capacity: value,
+                          refill_rate:
+                            'refill_rate' in draft.config
+                              ? draft.config.refill_rate
+                              : 2,
+                          key_strategy: 'account',
+                        },
+                      } as Rule)
+                    }
+                  />
 
-                <NumberField
-                  label="Refill rate / second"
-                  value={
-                    'refill_rate' in draft.config
-                      ? draft.config.refill_rate
-                      : 2
-                  }
-                  step={0.1}
-                  onChange={(value) =>
-                    setDraft({
-                      ...draft,
-                      config: {
-                        capacity:
-                          'capacity' in draft.config
-                            ? draft.config.capacity
-                            : 120,
-                        refill_rate: value,
-                        key_strategy: 'account',
-                      },
-                    } as Rule)
-                  }
-                />
-              </div>
-            ) : (
-              <div className="form-grid">
-                <NumberField
-                  label="Request limit"
-                  value={
-                    'limit' in draft.config
-                      ? draft.config.limit
-                      : 5
-                  }
-                  onChange={(value) =>
-                    setDraft({
-                      ...draft,
-                      config: {
-                        limit: value,
-                        window_seconds:
-                          'window_seconds' in draft.config
-                            ? draft.config.window_seconds
-                            : 10,
-                        key_strategy: 'account',
-                      },
-                    } as Rule)
-                  }
-                />
+                  <NumberField
+                    label="Refill rate (tokens / second)"
+                    value={
+                      'refill_rate' in draft.config
+                        ? draft.config.refill_rate
+                        : 2
+                    }
+                    step={0.1}
+                    onChange={(value) =>
+                      setDraft({
+                        ...draft,
+                        config: {
+                          capacity:
+                            'capacity' in draft.config
+                              ? draft.config.capacity
+                              : 120,
+                          refill_rate: value,
+                          key_strategy: 'account',
+                        },
+                      } as Rule)
+                    }
+                  />
+                </div>
 
-                <NumberField
-                  label="Window / seconds"
-                  value={
-                    'window_seconds' in draft.config
-                      ? draft.config.window_seconds
-                      : 10
-                  }
-                  onChange={(value) =>
-                    setDraft({
-                      ...draft,
-                      config: {
-                        limit:
-                          'limit' in draft.config
-                            ? draft.config.limit
-                            : 5,
-                        window_seconds: value,
-                        key_strategy: 'account',
-                      },
-                    } as Rule)
-                  }
-                />
-              </div>
+                <p className="field-help">
+                  Capacity controls the burst size. Refill rate controls the sustained request rate.
+                </p>
+              </>
+            )}
+
+            {(isFixedWindow || isSlidingWindow) && (
+              <>
+                <div className="form-grid">
+                  <NumberField
+                    label="Request limit"
+                    value={
+                      'limit' in draft.config
+                        ? draft.config.limit
+                        : 5
+                    }
+                    onChange={(value) =>
+                      setDraft({
+                        ...draft,
+                        config: {
+                          limit: value,
+                          window_seconds:
+                            'window_seconds' in draft.config
+                              ? draft.config.window_seconds
+                              : 10,
+                          key_strategy: 'account',
+                        },
+                      } as Rule)
+                    }
+                  />
+
+                  <NumberField
+                    label="Window duration (seconds)"
+                    value={
+                      'window_seconds' in draft.config
+                        ? draft.config.window_seconds
+                        : 10
+                    }
+                    onChange={(value) =>
+                      setDraft({
+                        ...draft,
+                        config: {
+                          limit:
+                            'limit' in draft.config
+                              ? draft.config.limit
+                              : 5,
+                          window_seconds: value,
+                          key_strategy: 'account',
+                        },
+                      } as Rule)
+                    }
+                  />
+                </div>
+
+                <p className="field-help">
+                  {isFixedWindow
+                    ? 'The limit resets when each fixed window expires.'
+                    : 'The limit is evaluated continuously across the rolling window.'}
+                </p>
+              </>
             )}
 
             <div className="field">
@@ -514,9 +506,7 @@ function RuleEditor({
               onChange={(event) =>
                 setDraft({
                   ...draft,
-                  status: event.target.value as
-                    | 'active'
-                    | 'inactive',
+                  status: event.target.value as 'active' | 'inactive',
                 })
               }
             >
@@ -553,9 +543,7 @@ function RuleEditor({
 
           <h3>{draft.service || 'service'}</h3>
 
-          <p className="mono">
-            {draft.resource || 'resource'}
-          </p>
+          <p className="mono">{draft.resource || 'resource'}</p>
 
           <div className="preview-divider" />
 
@@ -564,7 +552,7 @@ function RuleEditor({
             <strong>{algorithmLabel(draft.algorithm)}</strong>
           </div>
 
-          {draft.algorithm === 'token_bucket' ? (
+          {isTokenBucket && (
             <>
               <div className="preview-row">
                 <span>Capacity</span>
@@ -576,7 +564,7 @@ function RuleEditor({
               </div>
 
               <div className="preview-row">
-                <span>Refill</span>
+                <span>Refill rate</span>
                 <strong>
                   {'refill_rate' in draft.config
                     ? `${draft.config.refill_rate}/sec`
@@ -584,19 +572,39 @@ function RuleEditor({
                 </strong>
               </div>
             </>
-          ) : (
+          )}
+
+          {isFixedWindow && (
             <>
               <div className="preview-row">
-                <span>Limit</span>
+                <span>Requests</span>
                 <strong>
-                  {'limit' in draft.config
-                    ? draft.config.limit
-                    : 5}
+                  {'limit' in draft.config ? draft.config.limit : 5}
                 </strong>
               </div>
 
               <div className="preview-row">
-                <span>Window</span>
+                <span>Fixed window</span>
+                <strong>
+                  {'window_seconds' in draft.config
+                    ? `${draft.config.window_seconds}s`
+                    : '10s'}
+                </strong>
+              </div>
+            </>
+          )}
+
+          {isSlidingWindow && (
+            <>
+              <div className="preview-row">
+                <span>Requests</span>
+                <strong>
+                  {'limit' in draft.config ? draft.config.limit : 5}
+                </strong>
+              </div>
+
+              <div className="preview-row">
+                <span>Rolling window</span>
                 <strong>
                   {'window_seconds' in draft.config
                     ? `${draft.config.window_seconds}s`
@@ -607,10 +615,13 @@ function RuleEditor({
           )}
 
           <div className="preview-row">
+            <span>Key strategy</span>
+            <strong>Account</strong>
+          </div>
+
+          <div className="preview-row">
             <span>Status</span>
-            <span
-              className={`status-badge ${draft.status}`}
-            >
+            <span className={`status-badge ${draft.status}`}>
               {draft.status}
             </span>
           </div>

@@ -3,9 +3,9 @@ package handler
 import (
 	"net/http"
 
-	"github.com/faizahmd2/rate-limitter-service/internal/auth"
-	"github.com/faizahmd2/rate-limitter-service/internal/config"
-	"github.com/faizahmd2/rate-limitter-service/internal/redis"
+	"github.com/faizahmd2/rate-guard/internal/auth"
+	"github.com/faizahmd2/rate-guard/internal/config"
+	"github.com/faizahmd2/rate-guard/internal/redis"
 )
 
 type SystemHandler struct {

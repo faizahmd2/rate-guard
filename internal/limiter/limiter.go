@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/faizahmd2/rate-limitter-service/internal/config"
-	redisstore "github.com/faizahmd2/rate-limitter-service/internal/redis"
+	"github.com/faizahmd2/rate-guard/internal/config"
+	redisstore "github.com/faizahmd2/rate-guard/internal/redis"
 )
 
 type Service struct {

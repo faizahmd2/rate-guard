@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/faizahmd2/rate-limitter-service/internal/auth"
+	"github.com/faizahmd2/rate-guard/internal/auth"
 )
 
 func AdminAuth(

@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/faizahmd2/rate-limitter-service/internal/redis"
+	"github.com/faizahmd2/rate-guard/internal/redis"
 
 	"golang.org/x/sync/singleflight"
 )

@@ -7,7 +7,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/faizahmd2/rate-limitter-service/internal/auth"
+	"github.com/faizahmd2/rate-guard/internal/auth"
 )
 
 type TokenHandler struct {

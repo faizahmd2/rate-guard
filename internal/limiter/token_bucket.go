@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/faizahmd2/rate-limitter-service/internal/redis"
+	"github.com/faizahmd2/rate-guard/internal/redis"
 )
 
 type TokenBucketConfig struct {

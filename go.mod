@@ -1,4 +1,4 @@
-module github.com/faizahmd2/rate-limitter-service
+module github.com/faizahmd2/rate-guard
 
 go 1.26.4
 

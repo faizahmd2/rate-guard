@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/faizahmd2/rate-limitter-service/internal/config"
+	"github.com/faizahmd2/rate-guard/internal/config"
 	"github.com/go-chi/chi/v5"
 )
 

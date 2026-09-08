@@ -14,16 +14,16 @@ import (
 
 	chiMiddleware "github.com/go-chi/chi/v5/middleware"
 
-	"github.com/faizahmd2/rate-limitter-service/internal/api/handler"
-	"github.com/faizahmd2/rate-limitter-service/internal/api/middleware"
-	"github.com/faizahmd2/rate-limitter-service/internal/auth"
-	"github.com/faizahmd2/rate-limitter-service/internal/config"
-	"github.com/faizahmd2/rate-limitter-service/internal/limiter"
-	"github.com/faizahmd2/rate-limitter-service/internal/logger"
-	"github.com/faizahmd2/rate-limitter-service/internal/postgres"
-	"github.com/faizahmd2/rate-limitter-service/internal/redis"
-	"github.com/faizahmd2/rate-limitter-service/internal/sqlite"
-	"github.com/faizahmd2/rate-limitter-service/internal/web"
+	"github.com/faizahmd2/rate-guard/internal/api/handler"
+	"github.com/faizahmd2/rate-guard/internal/api/middleware"
+	"github.com/faizahmd2/rate-guard/internal/auth"
+	"github.com/faizahmd2/rate-guard/internal/config"
+	"github.com/faizahmd2/rate-guard/internal/limiter"
+	"github.com/faizahmd2/rate-guard/internal/logger"
+	"github.com/faizahmd2/rate-guard/internal/postgres"
+	"github.com/faizahmd2/rate-guard/internal/redis"
+	"github.com/faizahmd2/rate-guard/internal/sqlite"
+	"github.com/faizahmd2/rate-guard/internal/web"
 )
 
 func main() {

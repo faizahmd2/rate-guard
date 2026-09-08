@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/faizahmd2/rate-limitter-service/internal/auth"
+	"github.com/faizahmd2/rate-guard/internal/auth"
 )
 
 type AuthHandler struct {

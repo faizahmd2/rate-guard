@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/faizahmd2/rate-limitter-service/internal/config"
-	"github.com/faizahmd2/rate-limitter-service/internal/limiter"
+	"github.com/faizahmd2/rate-guard/internal/config"
+	"github.com/faizahmd2/rate-guard/internal/limiter"
 )
 
 type CheckHandler struct {
