@@ -1,30 +1,15 @@
 # RateGuard
 
-Distributed API Rate Limiting Service.
+Centralized API rate limiting for your services.
 
-RateGuard is a lightweight centralized rate-limiting service that applications can call before processing an operation.
+RateGuard provides token bucket, fixed window, and sliding window
+rate limiting through a simple HTTP API.
 
 ```text
-Application
-    │
-    │ POST /v1/check
-    ▼
-RateGuard
-    │
-    ├── Rule Cache
-    │
-    └── Redis
-          │
-          └── Atomic rate limiter
+Docker → Quick Start → API → SDKs
 ```
 
-The application decides what to do with the result — continue, retry, queue, or reject the request.
-
 ## Run with Docker
-
-The easiest way to run RateGuard is with Docker.
-
-RateGuard is distributed as a single container image. Redis is the only external runtime dependency.
 
 ### Pull the image
 
@@ -32,15 +17,7 @@ RateGuard is distributed as a single container image. Redis is the only external
 docker pull ghcr.io/faizahmd2/rate-guard:latest
 ```
 
-### Redis setup
-
 Make sure redis is runnng.
-
-Get the redis host and port, host could be `localhost` or with docker `host.docker.internal` or hostname where redis hosted.
-
-### Run RateGuard
-
-Once Redis is running:
 
 ```bash
 docker run -d \
@@ -62,88 +39,16 @@ http://localhost:4215
 
 Open the URL in your browser to access the admin UI.
 
-### Check the container
+---
 
-```bash
-docker ps
-```
+## Official RateGuard SDKs
 
-View logs:
+Supported languages:
 
-```bash
-docker logs -f rateguard
-```
+- [Node.js](https://www.npmjs.com/package/@faizahmd2/rateguard-sdk)
+- [Python](https://pypi.org/project/rateguard-sdk)
 
-Stop RateGuard:
-
-```bash
-docker stop rateguard
-```
-
-Start it again:
-
-```bash
-docker start rateguard
-```
-
-Remove the container:
-
-```bash
-docker rm -f rateguard
-```
-
-The SQLite database is persisted through the Docker volume:
-
-```text
-rateguard_data
-```
-
-## Features
-
-* Centralized API rate limiting
-* Redis-backed distributed limiting
-* Token Bucket
-* Fixed Window
-* Sliding Window
-* SQLite by default
-* PostgreSQL support
-* In-memory + Redis rule cache
-* Singleflight cache-miss protection
-* API token authentication
-* Admin UI
-* Docker support
-* Single binary deployment
-* Embedded frontend
-
-## Supported Algorithms
-
-### Token Bucket
-
-Useful for allowing controlled bursts while maintaining an average request rate.
-
-```json
-{
-  "capacity": 120,
-  "refill_rate": 2,
-  "key_strategy": "account"
-}
-```
-
-### Fixed Window
-
-Limits requests within a fixed time window.
-
-```json
-{
-  "limit": 5,
-  "window_seconds": 10,
-  "key_strategy": "account"
-}
-```
-
-### Sliding Window
-
-Tracks requests over a rolling time window.
+---
 
 ## API
 
@@ -187,25 +92,12 @@ Denied response:
 }
 ```
 
----
-
-# Requirements
-
-For local development:
+## Local Development
 
 * Go 1.26+
 * Node.js 22+
 * Redis
 * Git
-
-Production environment/Docker users only need:
-
-* Docker
-* Docker Compose
-
----
-
-# Local Development
 
 Clone the repository:
 
@@ -224,7 +116,7 @@ Edit `.env` with your local configuration.
 
 Start Redis.
 
-## Backend
+### Backend
 
 Download Go dependencies:
 
@@ -244,7 +136,7 @@ RateGuard will be available at:
 http://localhost:4215
 ```
 
-## Frontend
+### Frontend
 
 Install frontend dependencies:
 
@@ -261,7 +153,7 @@ npm run dev
 
 ---
 
-# Docker Development
+## Docker Development
 
 Build the image locally:
 
@@ -307,7 +199,7 @@ docker compose down
 
 ---
 
-# Environment Variables
+## Environment Variables
 
 Create `.env` from the example file:
 
@@ -317,7 +209,7 @@ cp .env.example .env
 
 ---
 
-# Architecture
+## Architecture
 
 RateGuard separates configuration management from the runtime rate-limiting path.
 
@@ -357,7 +249,7 @@ The Go application maintains a local rule cache and uses Redis as the distribute
 
 ---
 
-# Storage
+## Storage
 
 SQLite is the default storage backend and is suitable for a single-instance deployment.
 
@@ -367,7 +259,7 @@ Redis is required for distributed rate-limiting state.
 
 ---
 
-# Security
+## Security
 
 RateGuard uses API tokens for application access.
 
@@ -383,21 +275,6 @@ Admin authentication is separate from application API tokens.
 
 ---
 
-# SDKs
-
-Official client SDKs are maintained separately:
-
-**RateGuard SDKs**
-
-https://github.com/faizahmd2/rate-guard-sdk
-
-Currently available:
-
-* Node.js
-* Python
-
----
-
-# License
+## License
 
 MIT
