@@ -57,7 +57,7 @@ docker run -d \
 ```
 
 If Redis is running somewhere else, replace `REDIS_HOST` with your Redis address.
-For redis host can be localhost or with docker host.docker.internal or ip where redis hosted.
+For redis host can be `localhost` or with docker `host.docker.internal` or hostname where redis hosted.
 
 RateGuard will be available at:
 
