@@ -32,13 +32,11 @@ RateGuard is distributed as a single container image. Redis is the only external
 docker pull ghcr.io/faizahmd2/rate-guard:latest
 ```
 
-### Generate a cookie secret
+### Redis setup
 
-```bash
-openssl rand -hex 32
-```
+Make sure redis is runnng.
 
-Copy the generated value for cookie secret.
+Get the redis host and port, host could be `localhost` or with docker `host.docker.internal` or hostname where redis hosted.
 
 ### Run RateGuard
 
@@ -55,9 +53,6 @@ docker run -d \
   -v rateguard_data:/app/data \
   ghcr.io/faizahmd2/rate-guard:latest
 ```
-
-If Redis is running somewhere else, replace `REDIS_HOST` with your Redis address.
-For redis host can be `localhost` or with docker `host.docker.internal` or hostname where redis hosted.
 
 RateGuard will be available at:
 
