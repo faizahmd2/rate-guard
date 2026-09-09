@@ -50,13 +50,14 @@ docker run -d \
   -p 4215:4215 \
   -e REDIS_HOST=localhost \
   -e REDIS_PORT=6379 \
-  -e COOKIE_SECRET="your-generated-secret" \
+  -e RATEGUARD_COOKIE_SECRET="your-generated-secret" \
   -e ENVIRONMENT=production \
   -v rateguard_data:/app/data \
   ghcr.io/faizahmd2/rate-guard:latest
 ```
 
 If Redis is running somewhere else, replace `REDIS_HOST` with your Redis address.
+For redis host can be localhost or with docker host.docker.internal or ip where redis hosted.
 
 RateGuard will be available at:
 

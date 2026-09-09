@@ -78,8 +78,6 @@ export default function Sidebar({
           <span className="status-dot" />
           <span>System operational</span>
         </div>
-
-        <span className="version">RateGuard v0.1</span>
       </div>
     </aside>
   )
